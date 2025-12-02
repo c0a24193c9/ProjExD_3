@@ -169,6 +169,27 @@ class Score:     #追加機能1
         screen.blit(self.img, self.pos)
 
 
+class Explosion:
+    """
+    爆発アニメーションクラス
+    """
+    def __init__(self,center):
+        self.images = [
+            pg.image.load("fig/explosion.gif"),
+            pg.transform.flip(pg.image.load("fig/explosion.gif"), True, False)
+        ]
+        self.index = 0
+        self.rct = self.images[0].get_rect()
+        self.rct.center = center
+        self.life = 10
+
+    def update(self, screen):
+        if self.life > 0:
+            screen.blit(self.images[self.index], self.rct)
+            self.index += (self.index + 1) % len(self.images)
+            self.life -= 1
+
+
 def main():
     pg.display.set_caption("たたかえ！こうかとん")
     screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -179,6 +200,7 @@ def main():
     bombs = [Bomb((255,0,0),10)for _ in range(NUM_OF_BOMBS)]
     beam = None  # ゲーム初期化時にはビームは存在しない
     beams = []
+    explosions =[]
     clock = pg.time.Clock()
     tmr = 0
     while True:
@@ -193,13 +215,22 @@ def main():
 
         for i, beam in enumerate(beams):  #追加機能2
             for j, bomb in enumerate(bombs):
-                if beam.rct.colliderect(bomb.rct):
-                    bird.change_img(6, screen)
-                    score.score += 1
-                    beams[i] = None
-                    bombs[j] = None 
+                if beam is not None and bomb is not None:
+                    if beam.rct.colliderect(bomb.rct):
+                        bird.change_img(6, screen)
+                        score.score += 1
+                        explosions.append(Explosion(bomb.rct.center))
+                        beams[i] = None
+                        bombs[j] = None
         bombs = [b for b in bombs if b is not None]
         beams = [b for b in beams if b is not None]
+
+        for beam in beams:
+            beam.update(screen)
+
+        for exp in explosions:
+            exp.update(screen)
+        explosions = [exp for exp in explosions if exp.life > 0]
         
         for b, bomb in enumerate(bombs):
             if bird.rct.colliderect(bomb.rct):
