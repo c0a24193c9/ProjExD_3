@@ -237,7 +237,7 @@ def main():
         for beam in beams:
             beam.update(screen)
 
-        for exp in explosions:
+        for exp in explosions:  #追加機能3
             exp.update(screen)
         explosions = [exp for exp in explosions if exp.life > 0]
         
