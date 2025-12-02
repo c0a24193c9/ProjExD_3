@@ -174,6 +174,12 @@ class Explosion:
     爆発アニメーションクラス
     """
     def __init__(self,center):
+        """
+        爆発エフェクト表示
+        引数1 images：surfaceリスト
+        引数2 index：初期値
+        引数3 life：爆発時間
+        """
         self.images = [
             pg.image.load("fig/explosion.gif"),
             pg.transform.flip(pg.image.load("fig/explosion.gif"), True, False)
@@ -184,6 +190,9 @@ class Explosion:
         self.life = 10
 
     def update(self, screen):
+        """
+        爆発経過時間
+        """
         if self.life > 0:
             screen.blit(self.images[self.index], self.rct)
             self.index += (self.index + 1) % len(self.images)
