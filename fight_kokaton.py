@@ -208,7 +208,7 @@ def main():
                     beam = None
                     bombs[b]=None
                     bird.change_img(6, screen)
-                    score.score += 1
+                    score.score += 1 #追加機能1
                     score.update(screen)
                     pg.display.update()
         bombs = [bomb for bomb in bombs if bomb is not None]
